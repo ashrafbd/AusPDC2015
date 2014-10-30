@@ -43,7 +43,7 @@
 
 
 \begin{document}
-\title{Detection Intrusion of WSN Over the Air Update  using Time Signature }
+\title{Securing WSN against Intrusion using Time Signature of Over the Air Update  }
 %Short paper for Doctoral Consortium at AusPDC 2015
 %Will be included in proceedings and need to be presented
 \author{
@@ -239,57 +239,24 @@ However, the mechanism of statistical treatment on information over a time perio
 
 \section{Methodology}
 \label{sec:meth}
-In this section, we provide a brief overview of the system design and describe the evaluation environment. % and procedures.
-%The original system design is quite elaborate, but details have been left out to accommodate the space limitation.
-% <dme> I don't understand why you think it's elaborate. It's actually really simple!
-%It's helpful to both writer and reader to organise this section chronologically: that is, describe each procedure in the order it was performed. For example, DNA-extraction, purification, amplification, assay, detection. Or, study area, study population, sampling technique, variables studied, analysis method.
-The proposed IDS will be evaluated using a set of simulations. %in comprehensive simulations.
-%While the system has been elaborately designed and aimed at testbed evaluation, it has not yet been performed at this stage of the research. 
-%\notedme{Dropped sentence here. What does ``aimed at testbed evaluation'' mean?}
-% <Ashraf>> I meant evaluation using a testbed implementation
-%The testbed implementation will be evaluated at some point in the future.
 
-%\notedme{You should redefine the term IWS in the body text I think. My rule of thumb is that you introduce abbreviations independently in the abstract and in the body text. Of course if you don't use an abbreviation subsequently, you shouldn't introduce it.}
-%The raw data generated from simulation logs were processed, related and  analysed to produce the IWS.
-%<Ashraf>>That is done now
-
-
-
-\subsubsection*{System Overview}
-\label{subsec:sysdeg}
-In this section, we provide a brief overview of the proposed system design  and describe the simulated evaluation environment.
-%\subsubsection*{IDS Framework}
-%\label{ssc:ids_fw}
+In this section, we provide a brief overview of the system design and describe the simulated evaluation environment. 
 \begin{figure}[btp]
     \centering
     \includegraphics[width=0.5\textwidth]{IDS_fw}	
     \caption{IDS Framework}
     \label{fig:ids_fw}
 \end{figure}
+
+\subsubsection*{System Design}
 The proposed IDS resides on an external system that is connected to the sink.
-The IDS framework components and chronology of the activities associated with the IDS has been shown in Figure~\ref{fig:ids_fw}.
+The IDS framework components and chronology of the activities associated with the IDS has been shown in Figure~\ref{fig:ids_fw} and~\ref{fig:ids_model} respectively.
 The intrusion detection algorithm requires some modification of the update protocol to enable an automatic reporting service in the mote by using datagram packets to carry latest update information to the sink.
 All motes are assumed to have time synchronisation accurate to 1~$\mu$s, e.g., achieved using the TSMP~\cite{Pister08tsmp:time}.
-
-
-\begin{figure}[btp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{IDS}
-    \caption{IDS Modelling}
-    \label{fig:ids_model}
-\end{figure}
-
 The intrusion detection activity begins with the action of motes by endorsing update time and initiating a datagram to the sink. 
 The packet travels to the sink using a synchronous acknowledgement mechanism in transport layer protocols~\cite{tep116}.
 After checking for correctness, the ITC then inserts the update time, mote ID and related information to the network database(NDB) in the IDS.
 The IDS maintains an identifier to differentiate among different update times from different runs for the same mote.
-%
-%The first software update run in the WSN is considered to be legitimate and the IDS takes this timing information as baseline.
-%It is possible and desirable that the IDS is trained with several other update runs.
-%More training improved the ability of the IDS to detect intrusion more accurately.
-%Utilising multiple runs are useful and beneficial as it increases accuracy and dependency.
-%However, the IDS needs to be manually controlled to enable multiple training runs.
-%Outcome from these runs are statistically treated to build the baseline.
 
 The authenticated initial software update runs are considered to be legitimate and the IDS uses these timing measurements to build signature.
 The time analyser module in the IDS inspects the NDB once an update activity has been detected and determines the changes from the signature and calculates IWS based on following utility function:
@@ -304,10 +271,14 @@ where,
 \item $\mathit{\mu_i}$---mean update time at mote $\mathit{i}$;  
 \item $\mathit{\sigma_i}$---standard deviation of update time at mote $\mathit{i}$. 
 \end{inparaenum}	
-
-While reporting severity or likelihood of an intrusion in quantitative term like the IWS is useful, it is more beneficial if the quantity is associated with some kind of interpretation.
-The IDS can classify the IWS in different Intrusion Warning Zones (IWZ) from a scale built from maximum expected IWS in a topology to imply certain warning levels.
-Threshold for building IWZ depends on the assumed ability of the IDS having IWS knowledge of all possible intrusions in the network.
+\begin{figure}[btp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{IDS}
+    \caption{IDS Modelling}
+    \label{fig:ids_model}
+\end{figure}
+While reporting severity or likelihood of an intrusion in quantitative term like the IWS is useful, it is more beneficial if the quantity is associated with some interpretation like classify the IWS in Intrusion Warning Zones (IWZ) based on a scale built from maximum expected IWS for a topology to imply certain warning levels.
+Building IWZ depends on the assumed ability of the IDS having IWS knowledge of all possible intrusions in the network.
 Such knowledge can be built by replicating intrusion activity from all nodes in the network.
 In situations where it is not possible, replicating intrusion activity from the furthest few nodes may serve the purpose.
 The heuristics follows from statistical techniques and feasibility of finding easily identifiable boundary.
@@ -322,123 +293,50 @@ The threat model is directed towards injection of unauthorised program images to
 The IDS is expected to handle malicious node update, node compromise, node failure.
 We assume that an  attacker  can take over one or more nodes deployed in hostile environment, and can access the code in a compromised node, use cryptanalysis to represent a false identity without physically compromising a node.
 However, he has  no special  access to  the  network and is unable to modify the underlying protocols running in the uncompromised nodes.
-The paper assumes several WSN settings like stattic WSN with a single  sink which is  protected from all kinds of attacks and cannot be compromised. 
+The paper assumes several WSN settings like static WSN with a single  sink which is  protected from all kinds of attacks and cannot be compromised. 
 \subsubsection*{Experiment Settings}
 \label{subsec:sim_env} 
-The IDS requires Deluge protocol to be able to report the time of executing  a new version of its software.
-The protocol was originally implemented in TinyOS and later has been ported to other embedded operating systems including Contiki\footnote{\url{http://www.contiki-os.org}}. 
-We used 
-Deluge protocol implemented in Contiki v2.7 on a system running on Ubuntu 12.04.
-%[So this will eventually need citation and a self-contained description.]
-`Cooja'\footnote{\url{https://github.com/contiki-os/contiki/wiki/An-Introduction-to-Cooja}}, a network simulator for Contiki, was used to simulate the software update pattern associated with Deluge protocol.
-%\notedme{Best to give academic citations, or footnote URLs for these technologies.}
-%We also used a plugin for Contiki called Mobility to aid our experiential setup.
-%Although the plugin was designed to deal with positions over time for the nodes in the simulation, we used it to load the exact location of the sensor motes into the `Cooja' simulator. 
-
-%\subsection*{Design of Experiments}
-%\label{subsec:exp_des}
-
-The simulation environment allows the software update pattern to be observed, by each WSN node reporting the time at which the new software update completes and starts executing.
+We used `Cooja'\footnote{https://github.com/contiki-os/contiki/wiki/An-Introduction-to-Cooja}, a network simulator for Contiki v2.7 running on Ubuntu 12.04, to simulate the software update pattern associated with Deluge protocol.
+The simulation environment allows each node to report the time at which the new software update completes and starts executing.
 The simulations evaluated the proposed IDS in different WSN topologies and explored the effect of parameters like power level.
-%\notedme{Compare the commented and rewritten sentences here. Terms like `cautiously' are not useful unless the context is clear.} %<Ashraf>> Thanks
-Evaluating the IDS on each of the topologies consisted of several test runs.
-The test runs were of two kinds: 
+Evaluating the IDS on each of the topologies consisted of several test runs that  were of two kinds: 
 \begin{inparaenum}
-\item test runs aimed at establishing baseline data consisted of 20 individual simulations that were initiated from the sink; and
+\item test runs aimed at to build signature consisted of 20 individual simulations that were initiated from the sink; and
 \item simulations that replicated intrusion initiated at different nodes except the sink.
 \end{inparaenum}
-Results obtained from all these simulations were utilised to model the expected pattern for a particular topology.
-%
-%\subsection*{Topologies}
-%\label{subsec:topos}
-The topologies were designed to observe the performance and effectiveness %of the  that were established using number of trial and error test runs 
-of the proposed system in different environmental scenarios. 
-In addition to this, effects of changes in parameters like power level on the IDS behaviour were also observed.
-%\notedme{Not clear what you're talking about, specifically.}
-
-
-We used topologies in experiments that had many shapes such as: linear, circular, elliptical, double rings, wide line, grid, tree and other random topologies, but do not have space to describe all of them here.
-%The names of the topologies here indicate that in each case the motes were deployed along the circumference of the geometrical shape that enabled packet propagation to take place according to a designed fashion.\notedme(1){drop---too obvious to justify saying.}
-%In each topology, minimum 20 nodes were deployed for a test to take place. 
-%More motes were necessary to replicate certain topologies.
-% Table~\ref{tab:topos} shows the number of motes used in experiments in corresponding topological  deployments.
-The motes were placed at a distance of 30--35 meter to allow  multiple transmission paths to all motes. % <dme> en-dash for number ranges, not em-dash	% <ashraf> I am trying to increase my English and LaTeX vocabulary
+We explored topologies such as: linear, circular, elliptical, double rings, wide line, grid, tree and other random topologies, but do not have space to describe them all.
+The motes were placed at a distance of 30--35 meter to allow  multiple transmission paths to all motes. 
 For most experiments, the radio transmission power level was set at 100\% which has an approximate maximum effective transmission range of 50 meters and is able to interfere with other motes up to 100 meters away.
-The Owheo WSN topology (based on the WSN in our building) was additionally tested at 50\%  to %quickly\notedme{?} 
-observe the difference from the parameter change.
+The Owheo WSN topology (based on the WSN in our building) was additionally tested at 50\%  to observe the difference from the parameter change.
 
 
 \subsection*{Procedure}
 \label{subsec:proc}
-%
-%Experiment procedure  was a combination of activities such as running simulation, analysing system log and processing data to arrive at a conclusion. 
-%\notedme{I'd just list the three steps if there are only three steps. Too simple to be worth using text to introduce subsequent short blocks of text.}
-%
-%
-%\subsubsection*{Processing  of Individual Test Run}
-%\label{ssc:test_runs}
-%Step 1: Running simulation
-\subsubsection*{Step 1} 
-In the environmental set up described above, all motes in the WSN were booted up at same time running one version of a diagnostic application. 
-The diagnostic application would necessarily report its time, version number and mote ID on the serial terminal every second at its serial port. 
 
+\subsubsection*{Step 1} 
+All motes in the WSN were booted up at same time running one version of a diagnostic application that reports its time, version number and mote ID every second on its serial terminal. 
 
 %Step 2: Stopping the simulation
 \subsubsection*{Step 2} 
-The base station dynamically began the update process and propagated another version of the software image using Deluge protocol. %, which is also called 
-Whenever the transfer to a mote was complete, the new image would replace its the one and reboot to begin executing itself.
-The  new application causes the motes to report their time, version number and mote ID on the serial terminal. 
+The sink dynamically began the update process by propagating another version of the software image using Deluge protocol. %, which is also called 
+Whenever the transfer to a mote was complete, the new image would  reboot to begin executing.
 In real system, the suggested modified Deluge protocol that runs with the OS would report the information to the sink using datagram.
 The simulator continued until all the motes in the WSN were updated and the reported events were logged. 
-%Step 3: Filtering out mote update time and distance
 The update time of each mote were filtered out  and were sorted In ascending order of update time.
 
-%Step 4: Calculating the euclidean distance and sorting
-%A cpp application was used to take input from this semi-processed information and another file that preserved the position information of the motes in the deployment.
-%The application processed the data to find out the euclidean distance of the motes from the sink.
-%It additionally sorted the rows based on update time in ascending order.
-%At this instance, we preserved the processed information in a file in following fashion:
-%\begin{verbatim}
-%--------------------------------------------
-%| 	Time (in ms)	|	Mote ID	| Distance |
-%--------------------------------------------
-%\end{verbatim}
-
-%Step 5: Calculating baseline data
-%\subsubsection*{Building the Baseline Data}
-%\label{ssc:build_baseline}
 \subsubsection*{Step 3} 
-To build the baseline for each topology, processed data from 20 simulations initiated from the sink were considered for building the baseline.
-Any change in variable parameters or in the topology setup would necessitate recalibrating the baseline.
-Mean and standard deviation of mote update times, generally in seconds, were statistically calculated to build the baseline.
-These were the inputs to the IDS to calculate the IWS according to the utility function shown in Equation~\ref{eqn2}. 
-
-%Step 6: Calculating IWS
-%\subsubsection*{Calculating IWS}
-%\label{ssc:calc_iws}
+Processed data e.g., mote update time from simulations initiated from the sink were statistically treated to build the signature consisting of mean and standard deviation .
+Any change in variable parameters or in the topology setup would necessitate recalibrating the signature.
 
 \subsubsection*{Step 4} 
 Intrusion attacks at different nodes were replicated in simulations.
 The individual simulations runs were treated in a fashion  similar to~Step 1 and Step 2.
 The update time recorded at each of the motes is then analysed using Equation~\ref{eqn2}.
-% , which performed the following computations:
-% \begin{itemize}
-% \item Subtract new update time from corresponding mean of reference update time for each of the motes to calculate the absolute difference. For example, new update time of mote `$m$' is subtracted from mean update time found from the baseline data for mote `$m$' and its absolute value was calculated.
-% \item Absolute value is divided by a function of standard deviation to avoid division by zero situation. 
-% This is the intrusion score for individual node `$m$'.
-% %This also smooths the data to avoid unrelated variations.\notedme{what's an unrelated variation?}
-% \item Sum up the resulting intrusion scores at all individual nodes in the WSN to find out the total IWS for the update.
-% \end{itemize}
 The resulting values from this function present an approximation of the abnormality of the new update pattern. The higher the score, the more unusual the pattern is. 
 
 
-%\paragraph*{Step 6:} Calculating IW Zone / Classification
-
-
-%\subsection*{Overview of the System}
-%\label{sec:des}
-%\notedme{...}
-
+\subsubsection*{Step 5} 
+Building IWZ
 
 
 \section{Results and Evaluation}
@@ -451,40 +349,27 @@ The resulting values from this function present an approximation of the abnormal
 \bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} & \bd{12} & \bd{13} & \bd{14} & \bd{15} & \bd{16} & \bd{17} & \bd{18} & \bd{19} & \bd{20} \\
 %Mote ID           & 1 & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15  & 16 & 17 & 18 & 19 & 20 \\
 \hline
-$\mu$            & 0 &19 & 19& 69&139 &213&276&344&377&432 &432 &432 &377 &335 &273 & 207&137 & 68 & 17 & 19 \\
-$\sigma$		 & 0 & 5 & 5 & 6 & 22 & 36& 37&43 &44 & 44 & 44 & 44 & 44 & 45 & 44  & 33 & 24 & 5 & 3 & 5 \\
+$\mu$            & 0 &19 & 79& 143&197 &268&340&404&466&539 &594 &547 &476 &408 &326 & 268&210 & 152 & 83 & 19 \\
+$\sigma$		 & 0 & 2 & 11 & 12 & 13 & 25& 27&31 &30 & 38 & 37 & 49 & 37 & 35 & 25  & 24 & 23 & 24 & 16 & 3 \\
 \hline
 \end{tabular}
-\caption{Time statistics of motes in Elliptical topology}
+\caption{Time statistics of motes in Double Ring topology (Data from outer circle not presented)}
 \label{tab:stat_ellip}
 \end{table*}
 
-%\begin{table*}[t!]
-%\centering
-%\begin{tabular}{|l|*{20}{r|}r}
-%\hline
-%\bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} & \bd{12} & \bd{13} & \bd{14} & \bd{15} & \bd{16} & \bd{17} & \bd{18} & \bd{19} & \bd{20} \\
-%\hline
-%$\mathit{IWS}$
-%                 &0.01&16 &19 &73 & 140 &203 &246 &336 &344 &396 &395 &535 &406 &332 &269 &237 &113 & 72& 16 & 16 \\
-%\hline
-%\end{tabular}
-%\caption{Mote IWS in Elliptical topology. Further explained in Figure~\ref{fig:ellip}}
-%\label{tab:iws_ellip}
-%\end{table*}
 
 \begin{figure*}[t!]
     \centering
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
-        \includegraphics[height=1in, width=4in]{Elliptical}
-        \caption{IWS and Relative position of nodes}
-        \label{subfig:elliptopo} % <dme> it's is the \caption that updates the \label counters. You had \caption/\label in the wrong order.
+        \includegraphics[height=1in, width=4in]{DoubleRingZ}
+        \caption{IWS and Relative position of nodes in Double Ring Topology}
+        \label{subfig:elliptopo} 
     \end{subfigure}%
     ~ 
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
-        \includegraphics[height=1.2in]{Elliptical_column}
+        \includegraphics[height=1.2in]{DR_Column}
         \caption{Comparison of IWS at different motes}
         \label{subfig:ellipgraph} % <dme> it's is the \caption that updates the \label counters. You had \caption/\label in the wrong order.
     \end{subfigure}
