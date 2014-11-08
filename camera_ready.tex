@@ -55,20 +55,20 @@ There are risks and vulnerabilities associated with Wireless Sensor Network (WSN
 %While OTA update protocols make certain WSN management tasks easy, they open up potential vulnerabilities.
 An adversary can take advantage of the resource-constrained nature of the sensor motes to break through the limited protection that they have.
 %and employ enough resources to break in through the limited protection the sensors are armed with.
-% <dme> I generally think it's best form not to repeat sentences within body text and the abstract---I rephrase such repeated content.
+% <dme> I generally think it's best form not to repeat sentences within body text and the abstract---I rephrase such repeated content. <Ash> okay
 
 Security threats to WSNs are different in nature from threats to the Internet or even other wireless technologies. %technology. % and ad-hoc network, MANET.
 Implementation of security techniques in WSNs are characterised by constrained resources.
-Wireless channels offer little physical protection.
 %Wireless channels are inherently considered to be less secure.
-Well developed cryptographic security mechanisms such as WPS and PKM are inappropriate in WSNs.
-% <dme> you haven't said why
+As a result, well developed cryptographic security mechanisms such as WPS and PKM are inappropriate.
+% <dme> you haven't said why <Ash> connected
+Wireless channels offer little physical protection.
 Moreover, the capability of computing devices that can computationally compromise the cryptographic protection in sensors is growing rapidly.
 % at much faster rate.
-% <dme> you can't say things like "much faster rate" unless you also say what you're comparing against!
+% <dme> you can't say things like "much faster rate" unless you also say what you're comparing against! <Ash> okay
 As a result, WSNs are more vulnerable to intrusion attempts and security threats from attackers.
 However, the simple communication protocols and design make it easy to perform intrusion detection in WSNs~\cite{quing09}.
-% <dme> it's not obvious why.
+% <dme> it's not obvious why. <Ash> I'll look through the reference again. I think the author hasn't explained it either
 An Intrusion Detection System (IDS) can detect  break-in events and raise alerts, possibly also estimating the location and extent of the problem. % following some predefined procedures. 
 %It may be able to report the location and extent of break-in as well.
 
@@ -83,15 +83,17 @@ On the other hand, an intrusion that masks its pattern under the hood of normal 
 Specification-based and reputation-based techniques rely on manual input for defining normal and anomalous behaviour with lesser reliance on automation.
 However, these techniques have not been proved to be very effective because human interaction are more prone to errors and require more learning time~\cite{quing09, 1593102, 1290173, Chen:2009:NMI:1516241.1516282}. 
 % <dme> previous sentence doesn't explain what it's talking about or prove its point.
-%Although approaches described above
+%Although approaches described above   <Ash> I'll look through the reference again
 %Despite innovative ideas, only few IDSs are able to address the security issues related to software update.
-% <dme> the previous sentence didn't seem to add anything, so I removed it.
+% <dme> the previous sentence didn't seem to add anything, so I removed it. ,<Ash> okay
 
 Onat and Miri present an IDS design in which each node builds up statistics about received packets from its neighbours.
 % based on the last N packets received from each neighbour.
 If packets received from any neighbour display anomalous patterns after a predefined number of consecutive packets, intrusion alarms may be raised \cite{1512911}.
 Unfortunately, packet count statistics are not suitable in OTA software update scenarios due to the significant increase in packet traffic from the update itself.
 % <dme> it's the same idea though: just record the statistics during a software update. Why can't their methods be applied almost directly in the model you've built?
+%<Ash> Well, software update is a decentralised process and works on a single hop basis. A node can receive pages and packets from different sources, it may need to discard duplicates, re-request some packet or even page for corrupt packaets and so many uncertainities. So, it may not be possible to establish an expected pattern. 
+%Yet we can look into this type of processing.
 However, this statistical treatment motivates us to employ timing analysis within OTA update protocols.
 
 In this paper, we present an IDS that can detect intrusion in case of WSN software update.
@@ -171,43 +173,42 @@ The `Owheo WSN'\footnote{WSN deployed in the Owheo Building at the University of
 
 \subsection*{Experimental Procedure}
 \label{subsec:proc}
-
-\begin{itemize}
-%\subsubsection*{Step 1} 
-\item All motes in the WSN were booted up at same time running one version of a diagnostic application that reports its time, version number and mote ID every second on its serial terminal. 
+\paragraph*{Step 1} All motes in the WSN were booted up at same time running one version of a diagnostic application that reports its time, version number and mote ID every second on its serial terminal. 
 %Step 2: Stopping the simulation
-%\subsubsection*{Step 2} 
-\item The sink dynamically began the update process by propagating another version of the software image using Deluge protocol. %, which is also called 
+\paragraph*{Step 2}  The sink dynamically began the update process by propagating another version of the software image using Deluge protocol. %, which is also called 
 Whenever the transfer to a mote was complete, the new image would  reboot to begin executing.
 In a real system, the modified Deluge protocol that runs with the OS would send a report datagram to the sink.
 % <dme> what of the risks of doing this? I'm still concerned that you're "selling" a complete IDS when it might actually have some serious holes...
+%<Ash> I have added the reference to use of similar technique in real system. I would suggest at least two alternative approaches that, I suppose, should work in real system e.g., use of AM packet and use of CTP.
+%%<Ash> I feel "alarmed" when you use the word `concerned'. :(. Is it that bad? I want to use intrusion detection technique instead of IDS (I really agree it is not a complete IDS).
+A similar technique has been employed  for WSN failure detection in real system by~\cite{Kam14}.
 The simulator continued until all the motes in the WSN were updated and the times of their updates were logged. 
 %The update time of each mote were filtered out  and were sorted In ascending order of update time.
-% <dme> the previous point is too simple to mention, I think.
-%\subsubsection*{Step 3} 
-\item Processed data  were statistically treated to build the signature consisting of mean and standard deviation of  mote update time.
+% <dme> the previous point is too simple to mention, I think. <Ash> okay
+\paragraph*{Step 3}  Processed data  were statistically treated to build the signature consisting of mean and standard deviation of  mote update time.
 Changes to the topology or configuration of the WSN would necessitate recalibrating the signature.
-%\subsubsection*{Step 4} 
-\item Intrusion attacks at different nodes were replicated in simulations.
+\paragraph*{Step 4}   Intrusion attacks at different nodes were replicated in simulations.
 The individual simulation runs were treated in a fashion  similar to~Step 1 and Step 2.
-The update time recorded at each of the motes was then analysed using Equation~\ref{eqn2}.
-The resulting values from this function presented an approximation of the abnormality of the new update pattern. The higher the score, the more unusual the pattern was. 
+The update time recorded at each of the motes was then analysed using Equation~\ref{eqn2} to produce IWS.
+The resulting values from this function presented an approximation of the abnormality of the new update pattern. The higher the IWS, the more unusual the pattern was. 
 % <dme> You've failed to mention IWS in this step, which means readers will have no idea that the IWS scores you present later represent comparing an update initiated from their node, and measured from the real sink, compared to the baseline measurements.
-%\subsubsection*{Step 5} 
-\item We classified the IWS values into Intrusion Warning Zones (IWZ) based on a scale built from maximum expected IWS for a topology to imply certain warning levels.
+%<Ash> Thank you very much. Without mentioning IWS, this portion was really incomplete
+\paragraph*{Step 5}  We classified the IWS values into Intrusion Warning Zones (IWZ) based on a scale built from maximum expected IWS for a topology to imply certain warning levels.
 % <dme> I'm not sure that I believe that the IWZ concept can work in practice, as we've discussed previously...
-The heuristics follows from statistical techniques and the feasibility of finding an easily identifiable boundary.
-% <dme> don't understand what statistical techniques you're talking about
+% <Ash> we devided into zones to associate some kind of classification of the scores. otherwise, the IWS itself is a quantitive measure
+The heuristics follows from %statistical techniques and 
+the feasibility of finding an easily identifiable boundary.
+% <dme> don't understand what statistical techniques you're talking about 
+% <Ash>statistical techniques meant the use of \mu and \sigma to calculate IWS in the  first palce
 The IDS marks an IWS up to 10\% from the scale as GREEN to indicate safe zone,
 10\%--30\% as GREY to indicate a situation where rules are not known and 
 above 30\% to be possible intrusion and is marked as RED zone.
 % <dme> what's the evidence for this making sense?
-Forming IWZs requires the IDS to have IWS knowledge of all possible intrusions in the network.
-% <dme> this doesn't sound feasible---I think you mean something slightly different...
+Forming IWZs requires the IDS to have knowledge of IWS for  intrusions at each individual node in the network.
+% <dme> this doesn't sound feasible---I think you mean something slightly different... <Ash> rephrased correctly
 Such knowledge can be built by replicating intrusion activity from the furthest few nodes.
-% <dme> OK, that clears it up a bit, but it's not necessarily ALL possible intrusions.
-% <dme> What's your proposed use for the IWZs anyway? I'm not sure the text covers this.
-\end{itemize}
+% <dme> OK, that clears it up a bit, but it's not necessarily ALL possible intrusions. <Ash> rephrased correctly
+% <dme> What's your proposed use for the IWZs anyway? I'm not sure the text covers this. <Ash> in this methodology I described what I did with the experiement. The utilization is in discussion section
 
 \section{Results and Evaluation}
 \label{sec:eval}
@@ -223,23 +224,24 @@ $\mu$            & 0 &19 & 79& 143&197 &268&340&404&466&539 &594 &547 &476 &408 
 $\sigma$		 & 0 & 2 & 11 & 12 & 13 & 25& 27&31 &30 & 38 & 37 & 49 & 37 & 35 & 25  & 24 & 23 & 24 & 16 \\ %& 3 \\
 \hline
 \end{tabular}
-\caption{Time statistics of motes in Double Ring topology (partial data presented)}
-% <dme> time statistics of what? This is not usefully descriptive.
+\caption{Statistics of mote update times in Double Ring topology (partial data presented)}
+% <dme> time statistics of what? This is not usefully descriptive. <Ash> should be better now
 \label{tab:stat_ellip}
 \end{table*}
 
 %In this section, we presents the results, their interpretation and evaluate the contribution.
 %While discussing the performance and effects of the proposed IDS in different topologies are useful, discussing any of the topologies presents fair idea about the outcomes from the others and mentioning the cases when the outcome was considered  contrary to the expectations.
 
-While evaluating all experimented topologies is useful, the Double Ring topology is presented and  exceptions in other topologies are mentioned.
-% <dme> "exceptions in other topologies"---what does this mean?
+While evaluating all experimented topologies is useful, the results from Double Ring topology only is presented. %To suite space limitation
+% and  exceptions in other topologies are mentioned.
+% <dme> "exceptions in other topologies"---what does this mean? <Ash> Not mentioning them at all
 %We shall concentrate our discussion on results and findings of a single, double ring topology only.
 The topology has 46 nodes in two equicentric circles (Figure~\ref{fig:elliptopo}).
 The circles are within each others' transmission range.
 Table~\ref{tab:stat_ellip} shows the signature data: all times are in seconds.
 %The numbers indicate the measurements in time unit of seconds.
 It is observed that, standard deviation increases gently with distance.
-In contrast, to this, %mean increases sharply as the motes are placed further from the sink.
+In contrast to this, %mean increases sharply as the motes are placed further from the sink.
 %The stability observed in standard deviation results from efficient and reliable image transfer effected by OTA protocol.
 %The result in 
 %signature data shows that 
@@ -249,27 +251,30 @@ motes closer to the sink have lower mean which follows a steep rise with the inc
 \begin{figure}[t]
     \centering
         \includegraphics[width=.8\linewidth]{DoubleRingZ}
-        \caption{IWS and placement of nodes in Double Ring Topology}
+        \caption{IWS of intrusion initiated at each node and placement of nodes in Double Ring Topology}
 % IWS measured under what circumstance? An update initiated from each node? There's no context as to what the data means.
+% <Ash>  Correctly pointed out
         \label{fig:elliptopo} 
     \end{figure}
 
 Figure~\ref{fig:elliptopo} shows the placement of the motes with mote ID written at the centre and IWS beneath the tiny circle.
 The motes represented an intrusion point in the process of measuring IWS using Equation~\ref{eqn2}.
 The IWS increases linearly with the increase in distance from the sink.
-If the IWS in a network is organised in a specific order, 
+If the IWS in a network is organised in a specific order, e.g., chronologically  along some shape, 
 % <dme> which specific order? Do you mean "sorted"? If so, say so: there are many potential specific orders...
+% <Ash> chronologically
 it would represent the original topology in some fashion.
 For example, in the double ring topology, the circles are represented by the bimodal curve formed from the IWS represented by columns in Figure~\ref{fig:ellipgraph}.
 \begin{figure}[t]
 	\centering
         \includegraphics[width=\linewidth]{DR_Column}
-        \caption{Comparison of IWS at different motes}
+        \caption{Comparison of IWS of intrusion initiated at different motes}
         \label{fig:ellipgraph}
 \end{figure}
 
 The main contribution of this research comes from the ability to report anomalies using the quantitative IWS measure.
 % <dme> I'm not sure that this is much of a contribution---the related work will have done this already, no? I've thought of IWS as being more of a statistical and simulator warm-up exercise before tackling decentralised detection, etc.
+% <Ash> I do not knwo how to represent the IWS then. other may have similar contribution as well, doe it restrict me to suggest another option. Well, a comparison would be really good.
 For example:  a regular legitimate update, initiated from node ID 1, resulted in a IWS of 0.8.
 This result matches the theoretical expectation of very low IWS.
 In addition to this, for intrusion scenario simulated from the nodes near the sink, the IWS was still fairly low (e.g.\ at mote ID 2, 3, 20--23, and 46). 
@@ -289,7 +294,8 @@ Accordingly, Figure~\ref{fig:elliptopo} and~\ref{fig:ellipgraph} shows the regio
 \bd{Update Time}  &   404 	&  588 	& 170 	& 66 	& 16 &	 16 	& 65 &	 204 &	 526 & 329 &	 113 &	 66 &	 15 	& 16 	& 16 &	 65 &	125 & 277 \\
 \hline
 \end{tabular}
-\caption{Update Time of motes when intrusion initiated from node 14 in double-ring topology (Data from other nodes omitted) }
+\caption{Mote update time for intrusion at node 14 in Double Ring topology (partial data presented)}
+
 \label{tab:dr_time_14}
 \end{table*}
 
@@ -331,7 +337,7 @@ A network is more secure when it has a smaller GREEN and GREY zone, which implie
 %Similarly, a smaller or non-existent GREY zone would require lesser monitoring measures.
 %Such a secure WSN can be designed by varying the parameters like power level or even by physically relocating some motes.
 Obtaining a real world scenario by varying different sets of design parameters such as power levels or position of nodes is an impossible task even for a small WSN.
-% <dme> I have no idea what you're talking about in the previous sentence.
+% <dme> I have no idea what you're talking about in the previous sentence. <Ash> ki likhbo
 The simulation environment used to design the IDS can be effectively utilised to obtain the expected IWS score range for different sets of parameters and then rank the sets based on how effectively they produce IWS values. 
 However, any change in topology or design parameters, like power level, will require recalibrating the IDS. 
 For example, we have simulated the set of IWS outcomes within the `Owheo Sensor Network' 
@@ -394,7 +400,7 @@ In this paper, we modelled an IDS solution to detect intrusions in WSNs during O
 We discussed the potential dangers associated with such updates.
 The IDS is hosted on a server that remains physically connected to the  sink. 
 % The sink has an ITC application which in coordination with the IDS performs the detection activity.
-% <dme> ITC needs to be explained if included in the conclusion. Doesn't seem high value though.
+% <dme> ITC needs to be explained if included in the conclusion. Doesn't seem high value though. <Ash> okay
 The system watches over the timing of software update patterns using a modified version of the Deluge protocol.
 %Whenever a mote is updated, it sends an update related information to designated sink using a datagram.  
 %Related information from the datagram is filtered by the ITC for further processing at IDS.
@@ -414,8 +420,8 @@ The IDS also can indicate some other kinds of anomalies such as node relocation,
 The IDS has several limitations. 
 It assumes some special situations, such as a static WSN with a single sink.
 It also assumes that network-wide information will not be forged. %to have network wide transparent knowledge.
-These assumptions may not hold in a real WSN.
-% <dme> OK, so what are you planning to do in future to address this? Readers will want to know.
+These assumptions may not hold in a real WSN and can be addressed in a more realistic way using a decentralised technique, which we plan to experiment in future.
+% <dme> OK, so what are you planning to do in future to address this? Readers will want to know. <Ash> decentralised approach
 In addition to this, assumptions about the attacker are: the attacker can employ enough resources to break into the cryptographic protections within the sensors; however, he is not able to modify the protocols in an uncompromised sensor.
 The IDS has an obvious functional limitation.
 It cannot identify an intrusion in certain scenarios such as 
