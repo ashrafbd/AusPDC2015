@@ -51,7 +51,7 @@ To deal with this problem, we have suggested a passive security mechanism---an I
 
 Wireless sensors or motes are deployed in large numbers in uncontrolled environments, which makes them difficult to manage.
 Tasks such as bug-fixing are often managed using over the air (OTA) software update protocols such as Deluge~\cite{1031506}.
-There are risks and vulnerabilities associated with Wireless Sensor Network (WSN) OTA software updates that can enable an attacker to steal sensitive information, log network events, or cause denial of service.
+There are risks and vulnerabilities associated with Wireless Sensor Network (WSN) OTA software updates that can enable an attacker to steal sensitive information, log network events, or cause denial of service~\cite{1127826}.
 %While OTA update protocols make certain WSN management tasks easy, they open up potential vulnerabilities.
 An adversary can take advantage of the resource-constrained nature of the sensor motes to break through the limited protection that they have.
 %and employ enough resources to break in through the limited protection the sensors are armed with.
@@ -67,7 +67,7 @@ Moreover, the capability of computing devices that can computationally compromis
 % at much faster rate.
 % <dme> you can't say things like "much faster rate" unless you also say what you're comparing against! <Ash> okay
 As a result, WSNs are more vulnerable to intrusion attempts and security threats from attackers.
-However, the simple communication protocols and design make it easy to perform intrusion detection in WSNs~\cite{quing09}.
+%However, the simple communication protocols and design make it easy to perform intrusion detection in WSNs~\cite{quing09}.
 % <dme> it's not obvious why. <Ash> I'll look through the reference again. I think the author hasn't explained it either
 An Intrusion Detection System (IDS) can detect  break-in events and raise alerts, possibly also estimating the location and extent of the problem. % following some predefined procedures. 
 %It may be able to report the location and extent of break-in as well.
@@ -97,14 +97,11 @@ Unfortunately, packet count statistics are not suitable in OTA software update s
 However, this statistical treatment motivates us to employ timing analysis within OTA update protocols.
 
 In this paper, we present an IDS that can detect intrusion in case of WSN software update.
-The algorithm requires a minor modification of the OTA update protocol to send back a datagram containing the update time, 
-which enables the IDS with a centralised view of network-wide knowledge to work out a  `Surprise Score' or `Intrusion Warning Score' (IWS)~\cite{aalam15}.
-Our contributions are twofold: 
-\begin{inparaenum}
-\item  The IDS identifies anomalies in software update patterns and scores them quantitatively;
-\item We demonstrate that simulation can indicate the positions of WSN nodes that will best support the ability of similar IDSs to detect anomalies. 
+The algorithm requires update protocol to send back a datagram containing the update time to work out a `Surprise Score' or `Intrusion Warning Score' (IWS)~\cite{aalam15}.
+Our main contributions are: 
+the technique identifies anomalies in software update patterns and scores them quantitatively;
+we demonstrate that simulation can indicate the positions of WSN nodes that will best support the ability of similar IDSs to detect anomalies. 
 %scheme i.e., the IDS expectations can provide useful insight for designing secure WSN.
-\end{inparaenum}
 The rest of this paper is organised as follows.
 In Section~\ref{sec:meth}, we give a brief overview of the system  design and the experiment methodology. 
 Then we analyse the experimental results and present our evaluation in Section~\ref{sec:eval}.  
@@ -118,35 +115,33 @@ Finally, we conclude our arguments in Section~\ref{sec:concl}.
 \subsubsection*{System Design}
 %The IDS framework components has been shown in \ref{fig:ids_fw}.
 The IDS has three kinds of components---%
-\begin{inparaenum}
-\item motes in radio network; 
-\item an IDS transport client (ITC) application in the sink; and
-\item an IDS application that runs on an system with higher resources, coordinates with ITC, remains physically attached to the sink, and houses a network database (NDB).
-\end{inparaenum}
-The chronology of the activities in the IDS are---%
-\begin{inparaenum}
-\item Deluge protocol initiates update;
-\item Deluge disseminates the new software image using a multi-hop relay mechanism; 
-\item nodes deliver a datagram to the sink containing their timing information;
-\item packets from the nodes rely on other nodes \emph{en route} to reach to the sink; and
-\item the ITC application in the sink delivers relevant information to the IDS for processing 
-\end{inparaenum}~\cite{tep116}.
+i) motes in radio network; 
+ii) an IDS transport client (ITC) application in the sink; and
+iii) an IDS application that runs on an system with higher resources, coordinates with ITC, remains physically attached to the sink, and houses a network database (NDB).
+
+Following activities in the system are necessary to make the technique work---%
+i) Deluge protocol initiates update;
+ii) Deluge disseminates the new software image using a multi-hop relay mechanism; 
+iii) nodes deliver a datagram to the sink containing their timing information;
+iv) packets from the nodes rely on other nodes \emph{en route} to reach to the sink; and
+v) the ITC application in the sink delivers relevant information to the IDS for processing 
+
 After checking for correctness, the ITC then inserts the update time and mote ID into the NDB in the IDS.
 The IDS maintains an identifier to differentiate among different update times from different runs for the same mote.
-The authenticated initial software update runs are considered to be legitimate and the IDS uses these timing measurements to build signatures.
-The time analyser module in the IDS inspects the NDB once an update activity has been detected and determines the changes from the signature and calculates IWS based on following utility function:
+The IDS uses timing measurements from authenticated initial software update runs to build signatures.
+The time analyser module in the IDS inspects the NDB once an update activity has been detected. 
+It determines the changes from the signature and calculates IWS based on following utility function:
 \begin{equation}
 \label{eqn2} 
 	\mathit{IWS} = \sum \limits_{i=0}^{n} \frac{\left| \mu_i - t_i \right|}{\sigma_i + 1}
 \end{equation}
 where, 
-\begin{inparaenum}
-\item $\mathit{i}$---mote index; %\notedme{Why were you using capital letters all through here?} 
-\item $\mathit{t_i}$---image update time at mote $\mathit{i}$;  
-\item $\mathit{\mu_i}$---mean update time at mote $\mathit{i}$;  
-\item $\mathit{\sigma_i}$---standard deviation of update time at mote $\mathit{i}$. 
-\end{inparaenum}	
+$\mathit{i}$---mote index; %\notedme{Why were you using capital letters all through here?}  
+$\mathit{t_i}$---image update time at mote $\mathit{i}$;  
+$\mathit{\mu_i}$---mean update time at mote $\mathit{i}$;  and 
+$\mathit{\sigma_i}$---standard deviation of update time at mote $\mathit{i}$. 
 
+The system has been described more elaborately in~\cite{aalam15}.
 
 \subsubsection*{Threat Model}
 %The threat model is directed towards injection of unauthorised program images to infect the entire WSN.
@@ -162,11 +157,9 @@ We used `Cooja'---a %\footnote{https://github.com/contiki-os/contiki/wiki/An-Int
  network simulator in Contiki v2.7 running on Ubuntu 12.04, to simulate the software update pattern associated with Deluge protocol.
 The simulations evaluated the IDS in different WSN topologies and explored the effect of parameters such as power level.
 Evaluating the IDS on each of the topologies consisted of several test runs that  were of two kinds: 
-\begin{inparaenum}
-\item aimed at building signatures consisting of 20 individual simulations initiated from the sink; and
-\item simulations that replicated intrusion from nodes other than the sink.
-\end{inparaenum}
-We explored topologies such as: linear, circular, elliptical, double rings, wide line, grid, tree and other random topologies, but do not have space to discuss them in detail here. %describe them all.
+aimed at building signatures consisting of 20 individual simulations initiated from the sink; and
+simulations that replicated intrusion from nodes other than the sink.
+We explored different  topologies such as: linear, circular, elliptical, double rings, wide line, grid, tree and other random topologies, but do not have space to discuss them in detail here. %describe them all.
 The motes were placed at a distance of 30--35 meters to allow  multiple transmission paths to all motes. 
 For most experiments, the radio transmission power level was set at 100\% which has an approximate maximum effective transmission range of 50 meters and is able to interfere with other motes up to 100 meters away.
 The `Owheo WSN'\footnote{WSN deployed in the Owheo Building at the University of Otago. It is intended to be used for research purposes.} topology was additionally tested at 50\% power level.%  to observe the difference from the parameter change.
@@ -217,11 +210,11 @@ Such knowledge can be built by replicating intrusion activity from the furthest 
 \centering
 \begin{tabular}{|l|*{19}{r|}r|}
 \hline
-\bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} & \bd{12} & \bd{13} & \bd{14} & \bd{15} & \bd{16} & \bd{17} & \bd{18} & \bd{19} \\ % & \bd{20} \\
+\bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} & \bd{12} & \bd{13} & \bd{14} & \bd{15} & \bd{16} & \bd{17} \\% & \bd{18} & \bd{19} \\ % & \bd{20} \\
 %Mote ID           & 1 & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15  & 16 & 17 & 18 & 19 & 20 \\
 \hline
-$\mu$            & 0 &19 & 79& 143&197 &268&340&404&466&539 &594 &547 &476 &408 &326 & 268&210 & 152 & 83 \\ %& 19 \\
-$\sigma$		 & 0 & 2 & 11 & 12 & 13 & 25& 27&31 &30 & 38 & 37 & 49 & 37 & 35 & 25  & 24 & 23 & 24 & 16 \\ %& 3 \\
+$\mu$            & 0 &19 & 79& 143&197 &268&340&404&466&539 &594 &547 &476 &408 &326 & 268&210 \\%& 152 & 83 \\ %& 19 \\
+$\sigma$		 & 0 & 2 & 11 & 12 & 13 & 25& 27&31 &30 & 38 & 37 & 49 & 37 & 35 & 25  & 24 & 23 \\%& 24 & 16 \\ %& 3 \\
 \hline
 \end{tabular}
 \caption{Statistics of mote update times in Double Ring topology (partial data presented)}
@@ -288,10 +281,10 @@ Accordingly, Figure~\ref{fig:elliptopo} and~\ref{fig:ellipgraph} shows the regio
 \centering
 \begin{tabular}{|l|*{17}{r|}r|}
 \hline
-\bd{Node ID}           & \bd{1} & \bd{4} & \bd{10} & \bd{12} & \bd{13} & \bd{15} & \bd{16} & \bd{18} & \bd{27} & \bd{31} & \bd{34} & \bd{36} & \bd{37} & \bd{38} & \bd{39} & \bd{40} & \bd{41} & \bd{44}\\
+\bd{Node ID}           & \bd{1} & \bd{4} & \bd{10} & \bd{12} & \bd{13} & \bd{15} & \bd{16} & \bd{18} & \bd{27} & \bd{31} & \bd{34} & \bd{36} & \bd{37} & \bd{38} & \bd{39} & \bd{40} & \bd{41} \\%& \bd{44}\\
 %Mote ID           & 1 & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15  & 16 & 17 & 18 & 19 & 20 \\
 \hline
-\bd{Update Time}  &   404 	&  588 	& 170 	& 66 	& 16 &	 16 	& 65 &	 204 &	 526 & 329 &	 113 &	 66 &	 15 	& 16 	& 16 &	 65 &	125 & 277 \\
+\bd{Update Time}  &   404 	&  588 	& 170 	& 66 	& 16 &	 16 	& 65 &	 204 &	 526 & 329 &	 113 &	 66 &	 15 	& 16 	& 16 &	 65 &	125 \\%& 277 \\
 \hline
 \end{tabular}
 \caption{Mote update time for intrusion at node 14 in Double Ring topology (partial data presented)}
@@ -303,14 +296,14 @@ Accordingly, Figure~\ref{fig:elliptopo} and~\ref{fig:ellipgraph} shows the regio
 \centering
 \begin{tabular}{|l|*{20}{r|}r|}
 \hline
-\bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} & \bd{...} & \bd{33} & \bd{34} & \bd{35} & \bd{36} & \bd{37} & \bd{38} \\
+\bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} &  \bd{33} & \bd{34} & \bd{35} & \bd{36} & \bd{37} & \bd{38} \\
 %Mote ID           & 1 & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9 & 10 & 11 & ...& 31 & 32 & 33  & 34 & 35 & 36 & 37 & 38 \\
 \hline		\hline
 
-Power 100\%	   & 512 & 529 & 512 & 512 & 512  & 512 & 476 & 478 & 476 & 459 & 458 & ...& 53  & 48 & 49 & 51 & 47 & 29 \\
+Power 100\%	   & 512 & 529 & 512 & 512 & 512  & 512 & 476 & 478 & 476 & 459 & 458 & 53  & 48 & 49 & 51 & 47 & 29 \\
 \hline
 
-Power 50\%	  &31 & 59&254& 31& 31 &283& 32& 32& 254& 31 &253 & ... & 31  & 30 & 31 & 31 & 30 & 0 \\
+Power 50\%	  &31 & 59&254& 31& 31 &283& 32& 32& 254& 31 &253 &  31  & 30 & 31 & 31 & 30 & 0 \\
 \hline
 \end{tabular}
 \caption{IWS from intrusion at motes in Owheo WSN. Further explained in Figure~\ref{subfig:owheo_full} and~\ref{subfig:owheo_half} }
@@ -436,39 +429,6 @@ In future,  the IDS can be implemented to examine real world performance includi
 
 \bibliographystyle{agsm}    % or some other suitable package.
 \bibliography{auspdc}
-%\bibliography{CRPITExample}  % often included from a separate file.
-
-% \begin{thebibliography}{xx}
-
-% \harvarditem[Agrawal et~al.]{Agrawal, Imielinski \harvardand\
-  % Swami}{1993}{AIS93}
-% Agrawal, R., Imielinski, T. \harvardand\ Swami, A.  \harvardyearleft
-  % 1993\harvardyearright , Mining association rules between sets of items in
-  % large databases, {\em in} `ACM SIGMOD International Conference on Management
-  % of Data', Vol.~22, ACM Press, Washington DC, USA, pp.~207--216.
-
-% \harvarditem{Ben-Zvi}{1982}{BenZvi82}
-% Ben-Zvi, J.  \harvardyearleft 1982\harvardyearright , The time relational
-  % model, Ph.{D}., University of California, Los Angeles.
-
-% \harvarditem{Bentley}{1986}{Bentley86}
-% Bentley, J.  \harvardyearleft 1986\harvardyearright , {\em Programming pearls},
-  % Addison-Wesley.
-
-% \harvarditem[Fayyad et~al.]{Fayyad, Piatetsky-Shapiro \harvardand\
-  % Smyth}{1996}{FPS96}
-% Fayyad, U.~M., Piatetsky-Shapiro, G. \harvardand\ Smyth, P.  \harvardyearleft
-  % 1996\harvardyearright , From data mining to knowledge discovery: An overview,
-  % {\em in} U.~Fayyad, G.~Piatetsky-Shapiro, P.~Smyth \harvardand\
-  % R.~Uthurusamy, eds, `Advances in Knowledge Discovery and Data Mining', AAAI
-  % Press/ MIT Press, pp.~1--34.
-
-% \harvarditem{Snodgrass}{1987}{Snodgrass87}
-% Snodgrass, R.  \harvardyearleft 1987\harvardyearright , `The temporal query
-  % language tquel', {\em ACM Transactions on Database Systems} {\bf
-  % 12}(2),~247--298.
-
-% \end{thebibliography}
 
 
 \end{document}
