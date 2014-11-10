@@ -14,6 +14,7 @@
 \DeclareGraphicsExtensions{.jpg}
 \usepackage[cmex10]{amsmath}
 \usepackage[rgb]{xcolor}
+\usepackage{natbib}
 
 
 \newcommand*{\bd}[1]{\multicolumn{1}{|c|}{\bfseries #1}}
@@ -31,11 +32,12 @@
 
 \maketitle
 
-\newcommand\conferencenameandplace{Twenty-Ninth Australasian Computer Science Conference (ACSC2006), Hobart, Australia}
-\newcommand\volumenumber{48}
-\newcommand\conferenceyear{2006}
-\newcommand\editorname{Vladimir Estivill-Castro and Gillian Dobbie}
-\toappearstandard 
+\newcommand\conferencenameandplace{13th Australasian Symposium on Parallel and Distributed Computing (AusPDC 2015), Sydney, Australia, January 2015}
+      \newcommand\volumenumber{163}
+      \newcommand\conferenceyear{2015}
+      \newcommand\editorname{Bahman Javadi and Saurabh Kumar Garg}
+      \toappearstandard 
+
 
 \begin{abstract}
 While over the air (OTA) software updates makes certain WSN management tasks easy, they are vulnerable to intrusion attempts.
@@ -44,7 +46,7 @@ To deal with this problem, we have suggested a passive security mechanism---an I
 \end{abstract}
 \vspace{.1in}
 
-\noindent {\em Keywords:} Sensors, Wireless Sensor Network, WSN, IDS, Intrusion Detection System, Security
+\noindent {\em Keywords:} Sensor, Wireless Sensor Network, WSN, Intrusion Detection System, IDS, Security
 
 \section{Introduction}
 \label{sec:intro}
@@ -119,7 +121,7 @@ i) motes in radio network;
 ii) an IDS transport client (ITC) application in the sink; and
 iii) an IDS application that runs on an system with higher resources, coordinates with ITC, remains physically attached to the sink, and houses a network database (NDB).
 
-Following activities in the system are necessary to make the technique work---%
+Following activities are necessary for the intrusion detection technique to work---%
 i) Deluge protocol initiates update;
 ii) Deluge disseminates the new software image using a multi-hop relay mechanism; 
 iii) nodes deliver a datagram to the sink containing their timing information;
@@ -141,7 +143,7 @@ $\mathit{t_i}$---image update time at mote $\mathit{i}$;
 $\mathit{\mu_i}$---mean update time at mote $\mathit{i}$;  and 
 $\mathit{\sigma_i}$---standard deviation of update time at mote $\mathit{i}$. 
 
-The system has been described more elaborately in~\cite{aalam15}.
+The system has been described elaborately in~\cite{aalam15}.
 
 \subsubsection*{Threat Model}
 %The threat model is directed towards injection of unauthorised program images to infect the entire WSN.
@@ -298,15 +300,15 @@ Accordingly, Figure~\ref{fig:elliptopo} and~\ref{fig:ellipgraph} shows the regio
 \hline
 \bd{Node ID}           & \bd{1} & \bd{2} & \bd{3} & \bd{4} & \bd{5} & \bd{6} & \bd{7} & \bd{8} & \bd{9} & \bd{10} & \bd{11} &  \bd{33} & \bd{34} & \bd{35} & \bd{36} & \bd{37} & \bd{38} \\
 %Mote ID           & 1 & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9 & 10 & 11 & ...& 31 & 32 & 33  & 34 & 35 & 36 & 37 & 38 \\
-\hline		\hline
+\hline	%	\hline
 
 Power 100\%	   & 512 & 529 & 512 & 512 & 512  & 512 & 476 & 478 & 476 & 459 & 458 & 53  & 48 & 49 & 51 & 47 & 29 \\
-\hline
+%\hline
 
 Power 50\%	  &31 & 59&254& 31& 31 &283& 32& 32& 254& 31 &253 &  31  & 30 & 31 & 31 & 30 & 0 \\
 \hline
 \end{tabular}
-\caption{IWS from intrusion at motes in Owheo WSN. Further explained in Figure~\ref{subfig:owheo_full} and~\ref{subfig:owheo_half} }
+\caption{IWS from intrusion at motes in Owheo WSN (partial data presented). Further explained in Figure~\ref{subfig:owheo_full} and Figure~\ref{subfig:owheo_half}. }
 \label{tab:owheo}
 \end{table*}
 
